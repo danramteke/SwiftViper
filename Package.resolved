@@ -36,6 +36,15 @@
           "revision": "65a461d0a103896c8ff7e3f17f7be1a5badadeb0",
           "version": "0.9.0"
         }
+      },
+      {
+        "package": "StencilSwiftKit",
+        "repositoryURL": "https://github.com/SwiftGen/StencilSwiftKit",
+        "state": {
+          "branch": null,
+          "revision": "ed558b57e895558c68a6f0aa0e283e5d31b2d210",
+          "version": "2.1.0"
+        }
       }
     ]
   },

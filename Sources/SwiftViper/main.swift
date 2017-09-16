@@ -1,7 +1,30 @@
 import Stencil
-import Foundation
+import StencilSwiftKit
 import PathKit
 import Commander
+import Foundation
+
+
+
+let lowerFirstWord: ((Any?) throws -> Any?) =  { (_ value: Any?) in
+    let string = value as! String
+    let cs = CharacterSet.uppercaseLetters
+    let scalars = string.unicodeScalars
+    let start = scalars.startIndex
+    var idx = start
+    while let scalar = UnicodeScalar(scalars[idx].value), cs.contains(scalar) && idx <= scalars.endIndex {
+        idx = scalars.index(after: idx)
+    }
+    if idx > scalars.index(after: start) && idx < scalars.endIndex,
+        let scalar = UnicodeScalar(scalars[idx].value),
+        CharacterSet.lowercaseLetters.contains(scalar) {
+        idx = scalars.index(before: idx)
+    }
+    let transformed = String(scalars[start..<idx]).lowercased() + String(scalars[idx..<scalars.endIndex])
+    return transformed
+  }
+
+
 
 let main = command(
   Argument<String>("module", description: "Your VIPER module name"),
@@ -16,7 +39,9 @@ let main = command(
   let templatesPaths = Path.glob("\(templates)/*.stencil")
   try! targetPath.mkpath()
 
-  let environment = Environment(loader: FileSystemLoader(paths: [templatePath]))
+  let ext = Extension()
+  ext.registerFilter("lowerFirstWord", filter: lowerFirstWord)
+  let environment = Environment(loader: FileSystemLoader(paths: [templatePath]), extensions: [ext])
   let context = ["module": module]
 
   for template in templatesPaths {
